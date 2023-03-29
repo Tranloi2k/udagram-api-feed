@@ -19,6 +19,6 @@ script:
   - docker tag udagram-api-feed tranloi20001007/udagram-api-feed:latest
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker push tranloi20001007/udagram-api-feed:v1
+  - docker push tranloi20001007/udagram-api-feed:latest
 
 
