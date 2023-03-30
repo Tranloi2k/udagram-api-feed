@@ -1,14 +1,36 @@
 import { Router, Request, Response } from 'express';
+import { NextFunction } from 'connect';
 import { FeedItem } from '../models/FeedItem';
-import { requireAuth } from '../../users/routes/auth.router';
 import * as AWS from '../../../../aws';
+
+export function requireAuth(req: Request, res: Response, next: NextFunction) {
+    //   return next();
+        if (!req.headers || !req.headers.authorization){
+            return res.status(401).send({ message: 'No authorization headers.' });
+        }
+        
+    
+        const token_bearer = req.headers.authorization.split(' ');
+        if(token_bearer.length != 2){
+            return res.status(401).send({ message: 'Malformed token.' });
+        }
+        
+        const token = token_bearer[1];
+        return jwt.verify(token, c.config.jwt.secret , (err: any, decoded: any) => {
+          if (err) {
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate.' });
+          }
+          return next();
+        });
+    }
+   
 
 const router: Router = Router();
 
 // Get all feed items
 router.get('/', async (req: Request, res: Response) => {
     const items = await FeedItem.findAndCountAll({order: [['id', 'DESC']]});
-    items.rows.map((item) => {
+    items.rows.map((item: { url: string; }) => {
             if(item.url) {
                 item.url = AWS.getGetSignedUrl(item.url);
             }
