@@ -1,7 +1,9 @@
 import { Router, Request, Response } from 'express';
 import { NextFunction } from 'connect';
 import { FeedItem } from '../models/FeedItem';
+import * as jwt from 'jsonwebtoken';
 import * as AWS from '../../../../aws';
+import * as c from '../../../../config/config';
 
 export function requireAuth(req: Request, res: Response, next: NextFunction) {
     //   return next();
