@@ -7,6 +7,7 @@ const c = config.dev;
 if(c.aws_profile !== "DEPLOYED") {
   var credentials = new AWS.SharedIniFileCredentials({profile: c.aws_profile});
  AWS.config.credentials = credentials;
+ console.log(AWS.config.credentials)
 }
 
 export const s3 = new AWS.S3({
